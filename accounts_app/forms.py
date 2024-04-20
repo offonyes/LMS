@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 class LoginForm(forms.Form):
-    username = forms.EmailField(max_length=254)  # Поле для ввода email
+    username = forms.EmailField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean_username(self):
