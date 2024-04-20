@@ -6,13 +6,15 @@ body {
   font-family: Tahoma, Verdana, Segoe, sans-serif;
   font-size: 14px;
   background: #f6fffd;
-  padding: 120px;
+  padding-top: 100px;
   text-align: center;
+  size: 860px;
+  margin: 0;
 }
 
 .wrapper {
   width: 250px;
-  height: 1050px;
+  height: 700px;
   margin: 60px auto;
   perspective: 600px;
   text-align: left;
@@ -30,7 +32,7 @@ body {
 .face {
   position: absolute;
   width: 250px;
-  height: 1050px;
+  height: 700px;
   padding: 20px;
   background: #f6fffd;
 }
