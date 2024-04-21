@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-    <title>Your Title</title>
+    <title>Welcome Page</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -16,7 +16,7 @@
           <form id="login-form" method="POST" action="#">
             {% csrf_token %}
             <div class="field-wrapper">
-              <input type="text" name="username" placeholder="username">
+              <input type="text" name="username" placeholder="username" value = "{{ login_form.username.value }}">
               <label>E-mail</label>
               {% for error in login_form.username.errors %}
                   <span class="error">{{ error }}</span>
@@ -42,28 +42,28 @@
           <form method="POST" action="{% url 'reg' %}">
             {% csrf_token %}
             <div class="field-wrapper">
-              <input type="text" name="first_name" placeholder="First Name">
+              <input type="text" name="first_name" placeholder="First Name" value = "{{ register_form.first_name.value }}">
               <label>First Name</label>
               {% for error in register_form.first_name.errors %}
                   <span class="error">{{ error }}</span>
               {% endfor %}
           </div>
             <div class="field-wrapper">
-                <input type="text" name="last_name" placeholder="Last Name">
+                <input type="text" name="last_name" placeholder="Last Name" value = "{{ register_form.last_name.value }}">
                 <label>Last Name</label>
                 {% for error in register_form.last_name.errors %}
                     <span class="error">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="field-wrapper">
-                <input type="text" name="passport_number" placeholder="Passport Number">
+                <input type="text" name="passport_number" placeholder="Passport Number" value = "{{ register_form.passport_number.value }}">
                 <label>Passport Number</label>
                 {% for error in register_form.passport_number.errors %}
                     <span class="error">{{ error }}</span>
                 {% endfor %}
             </div>
             <div class="field-wrapper">
-                <input type="text" name="email" placeholder="Email">
+                <input type="text" name="email" placeholder="Email" value = "{{ register_form.email.value }}">
                 <label>Email</label>
                 {% for error in register_form.email.errors %}
                     <span class="error">{{ error }}</span>
