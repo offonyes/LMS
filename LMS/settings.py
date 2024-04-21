@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'universities_app',
     'accounts_app',
+    'lms_app'
 ]
 
 MIDDLEWARE = [
@@ -126,13 +127,13 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = BASE_DIR / 'media'  
-MEDIA_URL = '/media/'  
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = "accounts_app.CustomUser"
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'  
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-SESSION_COOKIE_AGE = 3600  
-CSRF_COOKIE_SECURE = True  
+SESSION_COOKIE_AGE = 3600
+CSRF_COOKIE_SECURE = True
 
