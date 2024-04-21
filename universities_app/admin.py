@@ -1,5 +1,5 @@
 from django.contrib import admin
-from lms_app.models import Faculty, Student, Subject, Lecturer, PlainCustomUser
+from universities_app.models import Faculty, Student, Subject, Lecturer, PlainCustomUser
 
 
 class FacultyAdmin(admin.ModelAdmin):
