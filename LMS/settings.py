@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'universities_app',
     'accounts_app',
-    'lms_app'
 ]
 
 MIDDLEWARE = [
