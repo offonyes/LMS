@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Main Page{% endblock %}</title>
+    <title>{% block title %}Profile{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/main_styles.css' %}?v=2">
 </head>
 <body>
@@ -15,14 +15,23 @@
             <div class="sidebar">
                 <div class="box">
                     <ul>
-                        <li><a href="{% url 'profile' %}">My Profile</a></li>   
+                        <li><a href="{% url 'profile' %}" class="selected">My Profile</a></li>   
                         <li><a href="{% url 'subjects' %}">My Subjects</a></li>   
                         <li><a href="{% url 'all_subjects' %}"> All Subjects</a></li>   
                     </ul>
                 </div>
             </div>
             <div class="content">
-                Welcome to main page. 
+                    <h2>Profile Details</h2>
+                    <p>First Name: {{ user.first_name }}</p>
+                    <p>Last Name: {{ user.last_name }}</p>
+                    {% if role == 'Lecturer' %}
+                    <p>Role: {{ role }}</p>
+                    {% elif role == 'Student' %}
+                    <p>Facylty: {{ user.faculty }}</p>
+                    {% endif %}
+                    <p>Email: {{ user.email }}</p>
+                    <p>Personal Number: {{ user.personal_number }}</p>
             </div>
         </div>
     </div>

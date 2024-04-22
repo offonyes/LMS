@@ -28,10 +28,11 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'passport_number', 'email', 'password1', 'password2')
-
-    def clean_passport_number(self):
-        passport_number = self.cleaned_data['passport_number']
-        if not passport_number.isdigit() or len(passport_number) != 11:
-            raise ValidationError("Passport number must be a 11-digit number.")
-        return passport_number
+        fields = ('first_name', 'last_name', 'passport_number', 'email', 'password1', 'password2', )
+    
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_active = False  # Set is_active to False by default
+        if commit:
+            user.save()
+        return user

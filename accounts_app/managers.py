@@ -24,8 +24,6 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, first_name=first_name, last_name=last_name, personal_number=personal_number, **extra_fields)
         user.set_password(password)
-        if extra_fields.get("is_staff") is not True:
-            user.is_active = False
         user.save()
         return user
 
