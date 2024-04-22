@@ -34,7 +34,7 @@ class SubjectsView(TemplateView):
             context['max_subjects'] = '∞'
             context['role'] = 'Lecturer'
         elif hasattr(user, 'student'):
-            context['subjects'] = Student.objects.get(user=user).subjects.all()
+            context['subjects'] = Subject.objects.filter(student=user.student)
             context['subjects_count'] = context['subjects'].count()
             context['max_subjects'] = 7
             context['role'] = 'Student'
@@ -50,8 +50,6 @@ class AllSubjectsView(ListView):
 
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
-        # context['role'] = self.request.user.role
-        print(context)
         return context
     
     
