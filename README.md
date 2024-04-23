@@ -1,4 +1,4 @@
-# Learning Management System (LMS) Readme
+# Learning Management System (LMS)
 
 ## Overview
 This Learning Management System (LMS) is designed to facilitate students in viewing available courses, enrolling in new courses, and managing their course load. The system ensures that students are registered and authenticated to access courses, and they can only enroll in courses that are available for their enrolled faculties. Additionally, students are restricted to enrolling in a maximum of 7 courses.
