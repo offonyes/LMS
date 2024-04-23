@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.top-bar {
+    background-color: #a2f3e6;
+    color: #007bff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+}
+
+.university a, .user-info a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.university a:hover, .user-info a:hover {
+    color: #62429e;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile {
+    margin-right: 15px;
+}
+
+.logout img {
+    width: 15px;
+}
+
+.main-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.main-page-content {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+.box {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.box ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.box li {
+    margin-bottom: 10px;
+}
+
+.box a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.box a:hover {
+    color: #00356e;
+    text-decoration: underline;
+}
+.box a.selected {
+    color: #000000; 
+}

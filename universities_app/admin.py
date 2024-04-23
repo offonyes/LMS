@@ -1,38 +1,47 @@
 from django.contrib import admin
-from universities_app.models import Faculty, Student, Subject, Lecturer, PlainCustomUser
+from .models import Faculty, Subject, Lecturer, Student, CustomUser
 
 
-class FacultyAdmin(admin.ModelAdmin):
-    list_display = ("name",)
-
-
+@admin.register(Lecturer)
 class LecturerAdmin(admin.ModelAdmin):
-    list_display = ("user", "name", "surname")
+    list_display = ('user', 'first_name', 'last_name')
+
+    def save_model(self, request, obj, form, change):
+        obj.first_name = obj.user.first_name
+        obj.last_name = obj.user.last_name
+        super().save_model(request, obj, form, change)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user":
+            kwargs["queryset"] = CustomUser.objects.exclude(student__isnull=False)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+@admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    def display_subjects(self, obj):
-        return ", ".join([subject.name for subject in obj.subjects.all()])
+    list_display = ('user', 'first_name', 'last_name')
+    list_filter = ('faculty',)
 
-    list_display = ("user", "name", "surname", "display_subjects", "faculty")
+    def save_model(self, request, obj, form, change):
+        obj.first_name = obj.user.first_name
+        obj.last_name = obj.user.last_name
+        super().save_model(request, obj, form, change)
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user":
+            kwargs["queryset"] = CustomUser.objects.exclude(lecturer__isnull=False)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-class UserAdmin(admin.ModelAdmin):
-    list_display = ("username",)
-
-
+@admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "syllabus", "display_faculties", "display_students", "lecturer")
+    list_display = ('name', 'description', 'syllabus', 'get_names')
+    list_filter = ('faculties',)
 
-    def display_faculties(self, obj):
-        return ", ".join([faculty.name for faculty in obj.faculties.all()])
+    def get_names(self, obj):
+        return obj.lecturer.first_name + ' ' + obj.lecturer.last_name
 
-    def display_students(self, obj):
-        return ", ".join([student.name for student in obj.students.all()])
+    get_names.short_description = 'Lecturer'
 
 
-admin.site.register(Faculty, FacultyAdmin)
-admin.site.register(Lecturer, LecturerAdmin)
-admin.site.register(Student, StudentAdmin)
-admin.site.register(Subject, SubjectAdmin)
-admin.site.register(PlainCustomUser, UserAdmin)
+admin.site.register(Faculty)
