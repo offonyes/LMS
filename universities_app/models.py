@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from accounts_app.models import CustomUser
 
+
 # Create your models here.
 
 class Faculty(models.Model):
@@ -22,7 +23,7 @@ class Subject(models.Model):
 
     faculties = models.ManyToManyField('Faculty', verbose_name=_('Faculties'))
     lecturer = models.OneToOneField('Lecturer', on_delete=models.CASCADE, verbose_name=_('Lecturer'))
-    student = models.ManyToManyField('Student', verbose_name=_('Student'), limit_choices_to={'id__lte': 7})
+    student = models.ManyToManyField('Student', verbose_name=_('Student'), limit_choices_to={'id__lte': 7}, blank=True)
 
     class Meta:
         verbose_name = _('Subject')
@@ -30,7 +31,7 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Lecturer(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name=_('User'))

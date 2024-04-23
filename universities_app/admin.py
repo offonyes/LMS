@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import Faculty, Subject, Lecturer, Student, CustomUser
-from django.db.models import Count
 
 
 @admin.register(Lecturer)
@@ -21,6 +20,7 @@ class LecturerAdmin(admin.ModelAdmin):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('user', 'first_name', 'last_name')
+    list_filter = ('faculty',)
 
     def save_model(self, request, obj, form, change):
         obj.first_name = obj.user.first_name
@@ -36,11 +36,12 @@ class StudentAdmin(admin.ModelAdmin):
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'syllabus', 'get_names')
-    
+    list_filter = ('faculties',)
+
     def get_names(self, obj):
         return obj.lecturer.first_name + ' ' + obj.lecturer.last_name
-    
+
     get_names.short_description = 'Lecturer'
 
 
-admin.site.register(Faculty)    
+admin.site.register(Faculty)

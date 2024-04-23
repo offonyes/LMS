@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Profile{% endblock %}</title>
+    <title>{% block title %}{{subject.name}}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/main_styles.css' %}?v=2">
     <style>
         table {
@@ -41,6 +41,7 @@
                     <p>Subject ID: {{ subject.id }}</p>
                     <p>Lecturer: {{ subject.lecturer }}</p>
                     <p>Description: {{ subject.description }}</p>
+                    <p>Syllabus: <a href="{{ subject.syllabus.url }}" download>Download</a></p>
                     <p>Students: {{ subject.student.count }}</p>
                     {% if subject.student.count > 0 %}
                     <table>

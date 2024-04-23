@@ -7,6 +7,7 @@ from universities_app.models import Subject, Student
 from django.shortcuts import render, get_object_or_404, redirect
 from universities_app.forms import LecturerForm, StudentForm
 
+
 @method_decorator(login_required(login_url='/'), name='dispatch')
 class ProfileView(TemplateView):
     template_name = 'universities_app/profile.html'
@@ -42,7 +43,6 @@ class SubjectsView(TemplateView):
         return context
 
 
-
 @method_decorator(login_required(login_url='/'), name='dispatch')
 class AllSubjectsView(ListView):
     template_name = 'universities_app/all_subjects.html'
@@ -52,33 +52,35 @@ class AllSubjectsView(ListView):
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
         return context
-    
-    
-login_required(login_url='/') 
+
+
+@login_required(login_url='/')
 def subject_detail(request, subject_id):
     subject = get_object_or_404(Subject, pk=subject_id)
     return render(request, 'universities_app/subject_id.html', {'subject': subject})
 
+
+@login_required(login_url='/')
 def edit_subject(request):
     if hasattr(request.user, 'lecturer'):
         subject_instance = Subject.objects.get(lecturer=request.user.lecturer)
         form = LecturerForm(instance=subject_instance)
-    else:
+    elif hasattr(request.user, 'student'):
         student_instance = Student.objects.get(user=request.user)
         subjects = student_instance.subject_set.all()
-        form = StudentForm(instance=student_instance, initial={'subjects': subjects})
+        form = StudentForm(instance=student_instance, initial={'subjects': subjects}, user=request.user)
 
     if request.method == 'POST':
         if hasattr(request.user, 'lecturer'):
             form = LecturerForm(request.POST, instance=subject_instance)
             if form.is_valid():
                 form.save()
-                return redirect('profile') 
+                return redirect('subjects')
         else:
-            form = StudentForm(request.POST, instance=student_instance)
+            form = StudentForm(request.POST, instance=student_instance, user=request.user)
             if form.is_valid():
                 form.save()
                 student_instance.subject_set.set(form.cleaned_data['subjects'])
-                return redirect('profile')  
+                return redirect('subjects')
 
     return render(request, 'accounts_app/edit_subject.html', {'form': form})
