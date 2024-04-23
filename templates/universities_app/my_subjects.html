@@ -20,6 +20,33 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        .main-page-content {
+            display: flex; 
+            justify-content: space-between; 
+
+        .subjects-info {
+            flex-grow: 1; 
+            display: inline-block; 
+        }
+
+        .subjects-button {
+            float: right; 
+        }
+        .button {
+            background-color: #a2f3e6;
+            border: 1px solid #a2f3e6;
+            border-radius: 4px;
+            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+            box-sizing: border-box;
+            color: #fff;
+            touch-action: manipulation;
+            padding: 10px 25px;
+        }
+        .button:hover {
+            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+            transform: translateY(-2px);
+            background-color: #78d3c4;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +65,13 @@
             </div>
             <div class="content">
                     <h2>My subjects</h2>
-                    <p>Subjects counts: {{ subjects_count }} / {{ max_subjects }}</p>
+                    <div class="subjects-info">
+                        <p>Subjects counts: {{ subjects_count }} / {{ max_subjects }}</p>
+                    </div>
+                    <div class="subjects-button">
+                        <a href="edit/" class="button">Edit</a>
+                    </div>
+
                     <table>
                         <thead>
                           <tr>
