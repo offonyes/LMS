@@ -10,7 +10,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean_username(self):
-        username = self.cleaned_data['username']
+        username = self.cleaned_data["username"]
         try:
             validate_email(username)
         except ValidationError:
@@ -18,7 +18,7 @@ class LoginForm(forms.Form):
         return username
 
     def clean_password(self):
-        password = self.cleaned_data['password']
+        password = self.cleaned_data["password"]
         return password
 
 
@@ -30,7 +30,14 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'passport_number', 'email', 'password1', 'password2',)
+        fields = (
+            "first_name",
+            "last_name",
+            "passport_number",
+            "email",
+            "password1",
+            "password2",
+        )
 
     def save(self, commit=True):
         user = super().save(commit=False)
