@@ -28,7 +28,7 @@ This Learning Management System (LMS) is designed to facilitate students in view
 - Django
 
 ## Database:
-![database](https://github.com/offonyes/LMS/blob/main/database_structure.png))
+![database](https://github.com/offonyes/LMS/blob/main/database_structure.png)
 ## Installation
 1. Clone or download the project repository.
 2. Install the required dependencies using the provided requirements.txt file:
