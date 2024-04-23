@@ -40,5 +40,5 @@ pip install -r requirements.txt
 ```py
 python manage.py runserver
 ```
-Admin accounts - adming@gmail.com adming (also lecturer)
+Admin accounts - adming@gmail.com admin (also lecturer)
 Student accounts - user1@gmail.com 123_123_
