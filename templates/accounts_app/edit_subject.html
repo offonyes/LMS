@@ -4,8 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Main Page{% endblock %}</title>
+    <title>{% block title %}Edit{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/main_styles.css' %}?v=2">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     {% include 'menu.html' %}
@@ -22,7 +37,12 @@
                 </div>
             </div>
             <div class="content">
-                Welcome to main page. 
+                <h2>Edit subject</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_ul }}
+                    <button type="submit">Save</button>
+                </form>
             </div>
         </div>
     </div>

@@ -1,0 +1,15 @@
+{% load static %}
+
+<div class="top-bar">
+    <div class="university">
+        <a href="{% url 'main' %}">LMS</a>
+    </div>
+    <div class="user-info">
+        <a href="{% url 'profile' %}" class="user-profile">
+            {{ user.first_name }} {{ user.last_name }}
+        </a>
+        <a href="{% url 'logout' %}">
+            <img src="{% static 'images/logout.png' %}" alt="Logout">
+        </a>
+    </div>
+</div>

@@ -29,6 +29,11 @@
                   <span class="error">{{ error }}</span>
               {% endfor %}
             </div>
+            {% if is_active is False %}
+              <div class="field-wrapper">
+                <span class="error">Your profile isn't active or password is incorrect. Please contact your administrator.</span>
+              </div>
+            {% endif %}
             <div class="field-wrapper">
               <input type="submit" name="login" value="Log in">
             </div>
