@@ -1,5 +1,12 @@
 from django.contrib import admin
-from universities_app.models import Faculty, Subject, Lecturer, Student
+from universities_app.models import (
+    Faculty,
+    Subject,
+    Lecturer,
+    Student,
+    Assignment,
+    AssignmentResponse,
+)
 from accounts_app.models import CustomUser
 
 
@@ -43,6 +50,16 @@ class SubjectAdmin(admin.ModelAdmin):
         return obj.lecturer.first_name + " " + obj.lecturer.last_name
 
     get_names.short_description = "Lecturer"
+
+
+@admin.register(Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    list_display = ("lecturer", "subject", "description", "deadline")
+
+
+@admin.register(AssignmentResponse)
+class AssignmentResponseAdmin(admin.ModelAdmin):
+    list_display = ("parent_assignment", "username", "submit_date")
 
 
 admin.site.register(Faculty)
