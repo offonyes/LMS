@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Faculty, Subject, Lecturer, Student, CustomUser
+from universities_app.models import Faculty, Subject, Lecturer, Student
+from accounts_app.models import CustomUser
 
 
 @admin.register(Lecturer)

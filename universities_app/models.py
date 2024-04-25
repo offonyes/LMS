@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from accounts_app.models import CustomUser
 
 
 # Create your models here.
@@ -20,9 +19,11 @@ class Subject(models.Model):
     name = models.CharField(max_length=200, verbose_name=_('Subject name'), unique=True)
     description = models.TextField(verbose_name=_('Description'))
     syllabus = models.FileField(verbose_name=_('Syllabus'), upload_to='syllabus/')
-
+    # Many-to-Many
     faculties = models.ManyToManyField('Faculty', verbose_name=_('Faculties'))
+    # One-to-One
     lecturer = models.OneToOneField('Lecturer', on_delete=models.CASCADE, verbose_name=_('Lecturer'))
+    # Many-to-Many
     student = models.ManyToManyField('Student', verbose_name=_('Student'), limit_choices_to={'id__lte': 7}, blank=True)
 
     class Meta:
@@ -34,7 +35,8 @@ class Subject(models.Model):
 
 
 class Lecturer(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name=_('User'))
+    # One-to-One
+    user = models.OneToOneField("accounts_app.CustomUser", on_delete=models.CASCADE, verbose_name=_('User'))
     first_name = models.CharField(max_length=200, verbose_name=_('Lecturer first name'), blank=True)
     last_name = models.CharField(max_length=200, verbose_name=_('Lecturer last name'), blank=True)
 
@@ -47,9 +49,11 @@ class Lecturer(models.Model):
 
 
 class Student(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, verbose_name=_('User'))
+    # One-to-One
+    user = models.OneToOneField("accounts_app.CustomUser", on_delete=models.CASCADE, verbose_name=_('User'))
     first_name = models.CharField(max_length=200, verbose_name=_('Student first name'), blank=True)
     last_name = models.CharField(max_length=200, verbose_name=_('Student last name'), blank=True)
+    # ForeignKey
     faculty = models.ForeignKey('Faculty', on_delete=models.CASCADE, verbose_name=_('Faculty'))
 
     class Meta:
