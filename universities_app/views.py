@@ -1,7 +1,7 @@
 from typing import Any
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.utils.decorators import method_decorator
 from universities_app.models import Subject, Student
 from django.shortcuts import render, get_object_or_404, redirect
@@ -54,10 +54,17 @@ class AllSubjectsView(ListView):
         return context
 
 
-@login_required(login_url='/')
-def subject_detail(request, subject_id):
-    subject = get_object_or_404(Subject, pk=subject_id)
-    return render(request, 'universities_app/subject_id.html', {'subject': subject})
+# @login_required(login_url='/')
+@method_decorator(login_required(login_url='/'), name='dispatch')
+class SubjectDetailView(DetailView):
+    model = Subject
+    template_name = 'universities_app/subject_id.html'
+    context_object_name = 'subject'
+    pk_url_kwarg = 'subject_id'
+
+# def subject_detail(request, subject_id):
+#     subject = get_object_or_404(Subject, pk=subject_id)
+#     return render(request, 'universities_app/subject_id.html', {'subject': subject})
 
 
 @login_required(login_url='/')
