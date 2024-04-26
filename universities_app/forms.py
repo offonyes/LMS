@@ -1,5 +1,5 @@
 from django import forms
-from universities_app.models import Subject, Student
+from universities_app.models import Subject, Student, Assignment, AssignmentResponse
 
 
 class LecturerForm(forms.ModelForm):
@@ -32,3 +32,18 @@ class StudentForm(forms.ModelForm):
         if selected_subjects and len(selected_subjects) > 7:
             raise forms.ValidationError("You can select up to 7 subjects.")
         return selected_subjects
+
+
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Assignment
+        fields = ['description', 'assignment_file', 'deadline']
+        widgets = {
+            'deadline': forms.DateInput(attrs={'type': 'date'})
+        }
+
+
+class AssignmetResponseForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentResponse
+        fields = ['student_note', 'assignment_file']

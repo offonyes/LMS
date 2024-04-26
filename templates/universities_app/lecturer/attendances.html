@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Attendance{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/main_styles.css' %}?v=2">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .main-page-content {
+            display: flex; 
+            justify-content: space-between; 
+        }
+        .subjects-button {
+            float: right; 
+        }
+        .button {
+            background-color: #a2f3e6;
+            border: 1px solid #a2f3e6;
+            border-radius: 4px;
+            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+            box-sizing: border-box;
+            color: #fff;
+            touch-action: manipulation;
+            padding: 10px 25px;
+        }
+        .button:hover {
+            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+            transform: translateY(-2px);
+            background-color: #78d3c4;
+        }
+    </style>
+</head>
+<body>
+    {% include 'menu.html' %}
+
+    <div class="main-page">
+        <div class="main-page-content">
+            <div class="sidebar">
+                <div class="box">
+                    <ul>
+                        <li><a href="{% url 'profile' %}">My Profile</a></li>   
+                        <li><a href="{% url 'subjects' %}">My Subjects</a></li>   
+                        <li><a href="{% url 'all_subjects' %}"> All Subjects</a></li>   
+                        <li><a href="{% url 'assigments' %}">Assigments</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content">
+                <h1>Attendance in {{ subject.name }}</h1>
+                <div class="subjects-button">
+                    <a href="{% url 'attendance_new' %}" class="button">Edit</a>
+                </div>
+                <form method="get" class="filter-form">
+                    <label for="Date">Date:</label>
+                    <select name="date" id="date">
+                        <option value="">All</option>
+                        {% for date in dates %}
+                        <option value="{{ date|date:'Y-m-d'}}" {% if date|date:'Y-m-d' == selected_date %} selected {% endif %}>{{ date }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Filter</button>
+                </form>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Attended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr>
+                            <td>{{ record.student }}</td>
+                            <td>{{ record.subject }}</td>
+                            <td>{{ record.date }}</td>
+                            <td>{% if record.attended %}Yes{% else %}No{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

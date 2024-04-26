@@ -1,8 +1,6 @@
-import django
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from universities_app.exceptions import DeadlineNotFitException
 
 
 # Create your models here.
@@ -90,54 +88,53 @@ class Student(models.Model):
 
 
 class Assignment(models.Model):
+    # ForeignKey
     lecturer = models.ForeignKey(
         "Lecturer", on_delete=models.CASCADE, verbose_name=_("Lecturer")
     )
     assignment_file = models.FileField(
-        verbose_name=_("Assignment file"), upload_to="Assignments/"
+        verbose_name=_("Assignment file"), upload_to="Assignments/",
+        blank=True
     )
     description = models.TextField(verbose_name=_("Description"))
     deadline = models.DateTimeField(verbose_name=_("Deadline"))
-    title = models.CharField(max_length=50, null=True, verbose_name=_("Title"))
 
     class Meta:
         verbose_name = _("Assignment")
         verbose_name_plural = _("Assignments")
 
-    def __str__(self):
-        return f"{self.lecturer} {self.title}"
-
     def is_in_time(self):
         return self.deadline > timezone.now()
 
-    def get_available_responses(self):
-        return AssignmentResponse.objects.filter(parent_assignment=self)
+    def is_past_due(self):
+        return self.deadline < timezone.now()
+
+
+def user_directory_path(instance, filename):
+    return "Assignment/user_{id}/{file}".format(id=instance.student.user, file=filename)
 
 
 class AssignmentResponse(models.Model):
+    # ForeignKey
     parent_assignment = models.ForeignKey(
         "Assignment", on_delete=models.CASCADE, verbose_name=_("Parent assignment")
     )
-    username = models.CharField(max_length=50, verbose_name=_("Username"))
+    student = models.ForeignKey('Student', on_delete=models.CASCADE, verbose_name=_('Student'))
     student_note = models.TextField(verbose_name=_("Student Note"))
-    submit_date = models.DateTimeField(editable=False, default=django.utils.timezone.now(), verbose_name=_("Submit Date"))
-    assignment_file = models.FileField(verbose_name=_("Assignment file"))
-
-    def save(self, *args, **kwargs):
-        upload_path = f"Assignments/{self.username}/"
-        self.assignment_file.upload_to = upload_path
-        super().save(*args, **kwargs)
-
-    def submit(self):
-        if self.parent_assignment.is_in_time():
-            self.submit_date = timezone.now()
-            self.save()
-            return True
-        raise DeadlineNotFitException
+    submit_date = models.DateTimeField(verbose_name=_("Submit Date"))
+    assignment_file = models.FileField(upload_to=user_directory_path, verbose_name=_("Assignment file"))
 
     class Meta:
-        verbose_name = _("Assignment Response")
-        verbose_name_plural = _("Assignment Responses")
+        verbose_name = _("Assignment response")
+        verbose_name_plural = _("Assignment responses")
 
-    def __str__(self):
-        return f"{self.parent_assignment.title} {self.username}"
+
+class Attendance(models.Model):
+    student = models.ForeignKey("Student", on_delete=models.CASCADE, verbose_name=_("Student"))
+    subject = models.ForeignKey("Subject", on_delete=models.CASCADE, verbose_name=_("Subject"))
+    date = models.DateField(verbose_name=_("Date"))
+    attended = models.BooleanField(default=False, verbose_name=_('Attended'))
+
+    class Meta:
+        verbose_name = _("Attendance")
+        verbose_name_plural = _("Attendances")

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}All sybjects{% endblock %}</title>
+    <title>{% block title %}Attendance{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/main_styles.css' %}?v=2">
     <style>
         table {
@@ -20,6 +20,10 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+        .main-page-content {
+            display: flex; 
+            justify-content: space-between; 
+        }
     </style>
 </head>
 <body>
@@ -32,32 +36,34 @@
                     <ul>
                         <li><a href="{% url 'profile' %}">My Profile</a></li>   
                         <li><a href="{% url 'subjects' %}">My Subjects</a></li>   
-                        <li><a href="{% url 'all_subjects' %}" class="selected"> All Subjects</a></li>
+                        <li><a href="{% url 'all_subjects' %}"> All Subjects</a></li>   
                         <li><a href="{% url 'assigments' %}">Assigments</a></li>
                     </ul>
                 </div>
             </div>
             <div class="content">
-                    <h2>All Subjects</h2>
+                <h1>Attendance in {{ subject }}</h1>
+                <form method="post">
+                    {% csrf_token %}
                     <table>
                         <thead>
-                          <tr>
-                            <th>Subject Id</th>
-                            <th>Name</th>
-                            <th>Lecturer</th>
-                        </tr>
+                            <tr>
+                                <th>Student</th>
+                                <th>Attendance</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            {% for subject in subjects %}
-                            <tr>
-                              <td>{{ subject.id }}</td>
-                              <td><a href="{% url 'subject' subject.id %}">{{ subject.name }}</a></td>
-                              <td>{{ subject.lecturer }}</td>
-                            </tr>
-                          {% endfor %}
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student }}</td>
+                                    <td><input type="checkbox" name="attendance" value="{{ student.id }}"></td>
+                                    <input type="hidden" name="students" value="{{ student.id }}">
+                                </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
-
+                    <button type="submit">Save</button>
+                </form>
             </div>
         </div>
     </div>

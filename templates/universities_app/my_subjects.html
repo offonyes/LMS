@@ -60,6 +60,7 @@
                         <li><a href="{% url 'profile' %}">My Profile</a></li>   
                         <li><a href="{% url 'subjects' %}" class="selected">My Subjects</a></li>   
                         <li><a href="{% url 'all_subjects' %}"> All Subjects</a></li>   
+                        <li><a href="{% url 'assigments' %}">Assigments</a></li>
                     </ul>
                 </div>
             </div>
@@ -92,6 +93,9 @@
                             {% elif role == 'Lecturer' %}
                             <td>{{ subject.student.count }}</td>
                             {% endif %}
+                            <td><a href="{% url 'assigments' %}">Assigments</a></td>
+                            <td><a href="{% url 'attendances' %}">Attendance</a></td>
+
                           </tr>
                           {% endfor %}
                         </tbody>
