@@ -27,6 +27,22 @@
         .subjects-button {
             float: right; 
         }
+        .button {
+          background-color: #a2f3e6;
+          border: 1px solid #a2f3e6;
+          border-radius: 4px;
+          box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+          box-sizing: border-box;
+          color: #fff;
+          touch-action: manipulation;
+          padding: 10px 25px;
+      }
+      .button:hover {
+          box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+          transform: translateY(-2px);
+          background-color: #78d3c4;
+      }
+      
     </style>
 </head>
 <body>
@@ -57,7 +73,7 @@
                           </tr>
                       </thead>
                     <div class="subjects-button">
-                        <a href={% url 'create_assigments' %} class="button">Add Assigments</a>
+                        <a href="{% url 'create_assigments' %}" class="button">Add Assigments</a>
                     </div>
                         <tbody>
                             {% for assignment in assignments %}
