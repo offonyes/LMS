@@ -1,5 +1,12 @@
 from django.contrib import admin
-from universities_app.models import Faculty, Subject, Lecturer, Student
+from universities_app.models import (
+    Faculty,
+    Subject,
+    Lecturer,
+    Student,
+    Assignment,
+    AssignmentResponse,
+)
 from accounts_app.models import CustomUser
 
 
@@ -43,6 +50,25 @@ class SubjectAdmin(admin.ModelAdmin):
         return obj.lecturer.first_name + " " + obj.lecturer.last_name
 
     get_names.short_description = "Lecturer"
+
+@admin.register(Assignment)
+class AssignmentAdmin(admin.ModelAdmin):
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "assignment_responses":
+            assignment_id = request.resolver_match.kwargs.get('object_id')
+            if assignment_id:
+                assignment = Assignment.objects.get(pk=assignment_id)
+                kwargs["queryset"] = assignment.get_available_responses()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(AssignmentResponse)
+class AssignmentResponseAdmin(admin.ModelAdmin):
+    list_display = ("parent_assignment", "username", "submit_date")
 
 
 admin.site.register(Faculty)
