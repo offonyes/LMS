@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Assigments{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/main_styles.css' %}?v=2">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .main-page-content {
+            display: flex; 
+            justify-content: space-between; 
+        }
+        .subjects-button {
+            float: right; 
+        }
+        .button {
+            background-color: #a2f3e6;
+            border: 1px solid #a2f3e6;
+            border-radius: 4px;
+            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+            box-sizing: border-box;
+            color: #fff;
+            touch-action: manipulation;
+            padding: 10px 25px;
+        }
+        .button:hover {
+            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+            transform: translateY(-2px);
+            background-color: #78d3c4;
+        }}
+    </style>
+</head>
+<body>
+    {% include 'menu.html' %}
+
+    <div class="main-page">
+        <div class="main-page-content">
+            <div class="sidebar">
+                <div class="box">
+                    <ul>
+                        <li><a href="{% url 'profile' %}">My Profile</a></li>   
+                        <li><a href="{% url 'subjects' %}">My Subjects</a></li>   
+                        <li><a href="{% url 'all_subjects' %}"> All Subjects</a></li>
+                        <li><a href="{% url 'assigments' %}" class="selected">Assigments</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content">
+                    <h2>All Assigments</h2>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Subject</th>
+                            <th>Deadline</th>
+                            
+                    {% if role == 'Lecturer' %}
+                            <th>Status</th>
+                          </tr>
+                      </thead>
+                    <div class="subjects-button">
+                        <a href={% url 'create_assigments' %} class="button">Add Assigments</a>
+                    </div>
+                        <tbody>
+                            {% for assignment in assignments %}
+                            <tr>
+                              <td><a href="{% url 'subject' assignment.lecturer.subject.id %}">{{ assignment.lecturer.subject }}</a></td>
+                              <td>{{ assignment.deadline }}</td>
+                              <td>
+                                <a href="{% url 'subject' assignment.id %}">{{ assignment.assignmentresponse_set.count }}/{{ max_students }} </a>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                    {% elif role == 'Student' %}
+                              <th>Description</th>
+                              <th>File</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                        <tbody>
+                            {% for assignment in assignments %}
+                            <tr>
+                              <td><a href="{% url 'subject' assignment.lecturer.subject.id %}">{{ assignment.lecturer.subject }}</a></td>
+                              <td>{{ assignment.deadline }}</td>
+                              <td>{{ assignment.description }}</td>
+                              <td><a href="{{ assignment.assignment_file.url }}" download>Download</a></td>
+                              <td>
+                                  {% if assignment.is_in_time %}
+                                    {% if assignment.assignmentresponse_set.exists  %}
+                                      <a href="{% url 'assigment_edit' assignment.assignmentresponse_set.first.id %}">Completed </a>
+                                    {% else %}
+                                        <a href="{% url 'assigment_new' assignment.id %}">Forthcoming </a>
+                                    {% endif %}
+                                  {% elif assignment.is_past_due %}
+                                    {% if assignment.assignmentresponse_set.exists  %}
+                                      <a href="{% url 'assigment_edit' assignment.assignmentresponse_set.first.id %}">Pastdue </a>
+                                    {% else %}
+                                        <a href="{% url 'assigment_new' assignment.id %}">Pastdue </a>
+                                    {% endif %}
+                                  {% else %}
+                                    {% if assignment.assignmentresponse_set.exists  %}
+                                      <a href="{% url 'assigment_edit' assignment.id %}">Completed in time </a>
+                                    {% else %}
+                                      <a href="{% url 'assigment_new' assignment.id %}">Completed in time </a>
+                                    {% endif %}
+                                  {% endif %}
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
