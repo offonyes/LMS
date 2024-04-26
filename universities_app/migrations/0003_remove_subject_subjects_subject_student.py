@@ -6,17 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('universities_app', '0002_remove_student_subjects_subject_subjects'),
+        ("universities_app", "0002_remove_student_subjects_subject_subjects"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='subject',
-            name='subjects',
+            model_name="subject",
+            name="subjects",
         ),
         migrations.AddField(
-            model_name='subject',
-            name='student',
-            field=models.ManyToManyField(blank=True, limit_choices_to={'id__lte': 7}, null=True, to='universities_app.student', verbose_name='Student'),
+            model_name="subject",
+            name="student",
+            field=models.ManyToManyField(
+                blank=True,
+                limit_choices_to={"id__lte": 7},
+                null=True,
+                to="universities_app.student",
+                verbose_name="Student",
+            ),
         ),
     ]

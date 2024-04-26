@@ -15,57 +15,163 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Faculty',
+            name="Faculty",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, unique=True, verbose_name='Faculty name')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=200, unique=True, verbose_name="Faculty name"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Faculty',
-                'verbose_name_plural': 'Faculties',
+                "verbose_name": "Faculty",
+                "verbose_name_plural": "Faculties",
             },
         ),
         migrations.CreateModel(
-            name='Lecturer',
+            name="Lecturer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=200, verbose_name='Lecturer first name')),
-                ('last_name', models.CharField(blank=True, max_length=200, verbose_name='Lecturer last name')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="Lecturer first name"
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="Lecturer last name"
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="User",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Lecturer',
-                'verbose_name_plural': 'Lecturers',
+                "verbose_name": "Lecturer",
+                "verbose_name_plural": "Lecturers",
             },
         ),
         migrations.CreateModel(
-            name='Subject',
+            name="Subject",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200, unique=True, verbose_name='Subject name')),
-                ('description', models.TextField(verbose_name='Description')),
-                ('syllabus', models.FileField(upload_to='syllabus/', verbose_name='Syllabus')),
-                ('faculties', models.ManyToManyField(to='universities_app.faculty', verbose_name='Faculties')),
-                ('lecturer', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='universities_app.lecturer', verbose_name='Lecturer')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        max_length=200, unique=True, verbose_name="Subject name"
+                    ),
+                ),
+                ("description", models.TextField(verbose_name="Description")),
+                (
+                    "syllabus",
+                    models.FileField(upload_to="syllabus/", verbose_name="Syllabus"),
+                ),
+                (
+                    "faculties",
+                    models.ManyToManyField(
+                        to="universities_app.faculty", verbose_name="Faculties"
+                    ),
+                ),
+                (
+                    "lecturer",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="universities_app.lecturer",
+                        verbose_name="Lecturer",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Subject',
-                'verbose_name_plural': 'Subjects',
+                "verbose_name": "Subject",
+                "verbose_name_plural": "Subjects",
             },
         ),
         migrations.CreateModel(
-            name='Student',
+            name="Student",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(blank=True, max_length=200, verbose_name='Student first name')),
-                ('last_name', models.CharField(blank=True, max_length=200, verbose_name='Student last name')),
-                ('faculty', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='universities_app.faculty', verbose_name='Faculty')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
-                ('subjects', models.ManyToManyField(blank=True, limit_choices_to={'id__lte': 7}, to='universities_app.subject', verbose_name='Subject')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="Student first name"
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="Student last name"
+                    ),
+                ),
+                (
+                    "faculty",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="universities_app.faculty",
+                        verbose_name="Faculty",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="User",
+                    ),
+                ),
+                (
+                    "subjects",
+                    models.ManyToManyField(
+                        blank=True,
+                        limit_choices_to={"id__lte": 7},
+                        to="universities_app.subject",
+                        verbose_name="Subject",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Student',
-                'verbose_name_plural': 'Students',
+                "verbose_name": "Student",
+                "verbose_name_plural": "Students",
             },
         ),
     ]
