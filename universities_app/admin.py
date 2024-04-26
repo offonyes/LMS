@@ -51,10 +51,19 @@ class SubjectAdmin(admin.ModelAdmin):
 
     get_names.short_description = "Lecturer"
 
-
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
-    list_display = ("lecturer", "subject", "description", "deadline")
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "assignment_responses":
+            assignment_id = request.resolver_match.kwargs.get('object_id')
+            if assignment_id:
+                assignment = Assignment.objects.get(pk=assignment_id)
+                kwargs["queryset"] = assignment.get_available_responses()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(AssignmentResponse)
