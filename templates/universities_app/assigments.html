@@ -80,7 +80,7 @@
                               <td><a href="{% url 'subject' assignment.lecturer.subject.id %}">{{ assignment.lecturer.subject }}</a></td>
                               <td>{{ assignment.deadline }}</td>
                               <td>
-                                <a href="{% url 'subject' assignment.id %}">{{ assignment.assignmentresponse_set.count }}/{{ max_students }} </a>
+                                <a href="{% url 'assigment' assignment.id %}">{{ assignment.assignmentresponse_set.count }}/{{ max_students }} </a>
                               </td>
                             </tr>
                           {% endfor %}
@@ -102,21 +102,21 @@
                               <td>
                                   {% if assignment.is_in_time %}
                                     {% if assignment.assignmentresponse_set.exists  %}
-                                      <a href="{% url 'assigment_edit' assignment.assignmentresponse_set.first.id %}">Completed </a>
+                                      <a href="{% url 'assigment_response_edit' assignment.assignmentresponse_set.first.id %}">Completed </a>
                                     {% else %}
-                                        <a href="{% url 'assigment_new' assignment.id %}">Forthcoming </a>
+                                        <a href="{% url 'assigment_response_new' assignment.id %}">Forthcoming </a>
                                     {% endif %}
                                   {% elif assignment.is_past_due %}
                                     {% if assignment.assignmentresponse_set.exists  %}
-                                      <a href="{% url 'assigment_edit' assignment.assignmentresponse_set.first.id %}">Pastdue </a>
+                                      <a href="{% url 'assigment_response_edit' assignment.assignmentresponse_set.first.id %}">Pastdue </a>
                                     {% else %}
-                                        <a href="{% url 'assigment_new' assignment.id %}">Pastdue </a>
+                                        <a href="{% url 'assigment_response_new' assignment.id %}">Pastdue </a>
                                     {% endif %}
                                   {% else %}
                                     {% if assignment.assignmentresponse_set.exists  %}
-                                      <a href="{% url 'assigment_edit' assignment.id %}">Completed in time </a>
+                                      <a href="{% url 'assigment_response_edit' assignment.id %}">Completed in time </a>
                                     {% else %}
-                                      <a href="{% url 'assigment_new' assignment.id %}">Completed in time </a>
+                                      <a href="{% url 'assigment_response_new' assignment.id %}">Completed in time </a>
                                     {% endif %}
                                   {% endif %}
                               </td>

@@ -60,13 +60,27 @@
                 </div>
             </div>
             <div class="content">
-                    <h2>New Assigments</h2>
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="button">Save</button>
-                        {{ form.errors }}
-                    </form>
+                    <h2>Student response</h2>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Student</th>
+                            <th>Note</th>
+                            <th>Status</th>
+                            <th>File</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            {% for response in results %}
+                            <tr>
+                                <td>{{response.student}}</td>
+                                <td>{{response.student_note}}</td>
+                                <td>Submitted at {{response.submit_date}}</td>
+                                <td><a href="{{response.assignment_file.url}}" download>Download</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
             </div>
         </div>
     </div>
