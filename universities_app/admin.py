@@ -62,8 +62,10 @@ class AssignmentAdmin(admin.ModelAdmin):
 class AssignmentResponseAdmin(admin.ModelAdmin):
     list_display = ("parent_assignment", "student", "submit_date")
 
+
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = ("student", "subject", "date", "attended")
+
 
 admin.site.register(Faculty)

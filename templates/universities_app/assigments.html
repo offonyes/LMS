@@ -27,21 +27,6 @@
         .subjects-button {
             float: right; 
         }
-        .button {
-            background-color: #a2f3e6;
-            border: 1px solid #a2f3e6;
-            border-radius: 4px;
-            box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
-            box-sizing: border-box;
-            color: #fff;
-            touch-action: manipulation;
-            padding: 10px 25px;
-        }
-        .button:hover {
-            box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
-            transform: translateY(-2px);
-            background-color: #78d3c4;
-        }}
     </style>
 </head>
 <body>
@@ -98,22 +83,28 @@
                               <td><a href="{% url 'subject' assignment.lecturer.subject.id %}">{{ assignment.lecturer.subject }}</a></td>
                               <td>{{ assignment.deadline }}</td>
                               <td>{{ assignment.description }}</td>
-                              <td><a href="{{ assignment.assignment_file.url }}" download>Download</a></td>
+                              <td>
+                                {% if assignment.assignment_file %}
+                                    <a href="{{ assignment.assignment_file.url }}" download>Download</a>
+                                {% else %}
+                                    No file available
+                                {% endif %}
+                              </td>
                               <td>
                                   {% if assignment.is_in_time %}
-                                    {% if assignment.assignmentresponse_set.exists  %}
+                                  {% if assignment.id in assignment_responses_exist %}
                                       <a href="{% url 'assigment_response_edit' assignment.assignmentresponse_set.first.id %}">Completed </a>
                                     {% else %}
                                         <a href="{% url 'assigment_response_new' assignment.id %}">Forthcoming </a>
                                     {% endif %}
                                   {% elif assignment.is_past_due %}
-                                    {% if assignment.assignmentresponse_set.exists  %}
+                                    {% if assignment.id in assignment_responses_exist %}
                                       <a href="{% url 'assigment_response_edit' assignment.assignmentresponse_set.first.id %}">Pastdue </a>
                                     {% else %}
                                         <a href="{% url 'assigment_response_new' assignment.id %}">Pastdue </a>
                                     {% endif %}
                                   {% else %}
-                                    {% if assignment.assignmentresponse_set.exists  %}
+                                    {% if assignment.id in assignment_responses_exist %}
                                       <a href="{% url 'assigment_response_edit' assignment.id %}">Completed in time </a>
                                     {% else %}
                                       <a href="{% url 'assigment_response_new' assignment.id %}">Completed in time </a>
@@ -125,7 +116,7 @@
                         </tbody>
                     </table>
                     {% endif %}
-            </div>
+            </div>  
         </div>
     </div>
 </body>

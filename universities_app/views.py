@@ -5,10 +5,11 @@ from django.views.generic import ListView, DetailView
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils.decorators import method_decorator
-from universities_app.models import Subject, Student, Assignment, AssignmentResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from universities_app.models import Subject, Student, Assignment, AssignmentResponse, Attendance
+from django.shortcuts import get_object_or_404, redirect, render
 from universities_app.forms import LecturerForm, StudentForm, AssignmentForm, AssignmetResponseForm
 from django.utils import timezone
+
 
 @method_decorator(login_required(login_url='/'), name='dispatch')
 class ProfileView(TemplateView):
@@ -104,7 +105,7 @@ class AssigmentsView(ListView):
         elif hasattr(user, 'lecturer'):
             queryset = Assignment.objects.filter(lecturer=user.lecturer).order_by('-deadline')
         return queryset
-    
+
     def get_context_data(self, **kwargs):
         user = self.request.user
         context = super().get_context_data(**kwargs)
@@ -112,58 +113,128 @@ class AssigmentsView(ListView):
         if hasattr(user, 'lecturer'):
             context['role'] = 'Lecturer'
             context['max_students'] = Student.objects.filter(subject=user.lecturer.subject).count()
-
         elif hasattr(user, 'student'):
             context['role'] = 'Student'
+
+            assignments = context['assignments']
+            assignment_responses_exist = {}
+            for assignment in assignments:
+                if assignment.assignmentresponse_set.filter(student=user.student).exists():
+                    assignment_responses_exist[assignment.id] = assignment.assignmentresponse_set.filter(
+                        student=user.student).exists()
+            context['assignment_responses_exist'] = assignment_responses_exist
         return context
-    
-    
+
+
 class AssignmentCreateView(CreateView):
     model = Assignment
     form_class = AssignmentForm
-    template_name = 'universities_app/new_assignments.html'  
-    success_url = reverse_lazy('assigments')  
+    template_name = 'universities_app/lecturer/new_assignments.html'
+    success_url = reverse_lazy('assigments')
 
     def form_valid(self, form):
         form.instance.lecturer = self.request.user.lecturer
         return super().form_valid(form)
-    
 
-class AssignmentDetailView(DetailView):
+
+class AssignmentDetailView(ListView):
     model = Assignment
-    template_name = 'universities_app/assigment.html'
-    context_object_name = 'assignment'
+    template_name = 'universities_app/lecturer/assigment_detail.html'
+    pk_url_kwarg = 'assigment_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = Assignment.objects.filter(pk=self.kwargs['assigment_id'])
+        context['results'] = AssignmentResponse.objects.filter(parent_assignment__in=queryset)
+        return context
+
 
 class AssignmentResponseCreateView(CreateView):
     model = AssignmentResponse
     form_class = AssignmetResponseForm
     pk_url_kwarg = 'assigment_id'
-    template_name = 'accounts_app/assignment.html'  
-    success_url = reverse_lazy('assigments') 
+    template_name = 'accounts_app/assignment.html'
+    success_url = reverse_lazy('assigments')
 
     def form_valid(self, form):
         form.instance.student = self.request.user.student
         form.instance.submit_date = timezone.now()
         form.instance.parent_assignment = Assignment.objects.get(pk=self.kwargs['assigment_id'])
         return super().form_valid(form)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Assignment"
+        context['assigment'] = Assignment.objects.get(pk=self.kwargs['assigment_id'])
         return context
-    
-    
+
+
 class AssignmentResponseUpdateView(UpdateView):
     model = AssignmentResponse
     form_class = AssignmetResponseForm
     pk_url_kwarg = 'assigment_id'
-    template_name = 'accounts_app/assignment.html'   
-    success_url = reverse_lazy('assigments')  
+    template_name = 'accounts_app/assignment.html'
+    success_url = reverse_lazy('assigments')
 
     def form_valid(self, form):
+        form.instance.student = self.request.user.student
         return super().form_valid(form)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Edit assignment"
+        context['assigment'] = Assignment.objects.get(pk=self.kwargs['assigment_id'])
         return context
+
+
+class AttendanceView(ListView):
+    model = Attendance
+    template_name = 'universities_app/lecturer/attendances.html'
+    context_object_name = 'attendance_records'
+
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        context['dates'] = Attendance.objects.dates('date', 'day')
+        context['selected_date'] = self.get_selected_date()
+        context['subject'] = Subject.objects.filter(lecturer=self.request.user.lecturer).first()
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        date = self.request.GET.get('date')
+        if date:
+            queryset = queryset.filter(date=date)
+
+        return queryset
+
+    def get_selected_date(self):
+        try:
+            return self.request.GET.get('date')
+        except TypeError:
+            return None
+
+
+def create_attendance(request):
+    subject_id = request.user.lecturer.subject.id
+    subject = get_object_or_404(Subject, id=subject_id)
+
+    if request.method == 'POST':
+        student_ids = request.POST.getlist('students')
+        attended_student_ids = request.POST.getlist('attendance')
+        for student_id in student_ids:
+            attended = student_id in attended_student_ids
+            student = get_object_or_404(Student, id=student_id)
+            attendance, created = Attendance.objects.get_or_create(
+                student=student,
+                subject=subject,
+                date=timezone.now(),
+            )
+            attendance.attended = attended
+            attendance.save()
+
+        return redirect('attendances')
+
+    else:
+        students = Student.objects.filter(subject=subject)
+        return render(request, 'universities_app/lecturer/new_attendances.html',
+                      {'students': students, 'subject': subject})
