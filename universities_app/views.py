@@ -125,7 +125,7 @@ class AssigmentsView(ListView):
             context['assignment_responses_exist'] = assignment_responses_exist
         return context
 
-
+@method_decorator(login_required(login_url='/'), name='dispatch')
 class AssignmentCreateView(CreateView):
     model = Assignment
     form_class = AssignmentForm
@@ -136,7 +136,7 @@ class AssignmentCreateView(CreateView):
         form.instance.lecturer = self.request.user.lecturer
         return super().form_valid(form)
 
-
+@method_decorator(login_required(login_url='/'), name='dispatch')
 class AssignmentDetailView(ListView):
     model = Assignment
     template_name = 'universities_app/lecturer/assigment_detail.html'
@@ -148,7 +148,7 @@ class AssignmentDetailView(ListView):
         context['results'] = AssignmentResponse.objects.filter(parent_assignment__in=queryset)
         return context
 
-
+@method_decorator(login_required(login_url='/'), name='dispatch')
 class AssignmentResponseCreateView(CreateView):
     model = AssignmentResponse
     form_class = AssignmetResponseForm
@@ -168,7 +168,7 @@ class AssignmentResponseCreateView(CreateView):
         context['assigment'] = Assignment.objects.get(pk=self.kwargs['assigment_id'])
         return context
 
-
+@method_decorator(login_required(login_url='/'), name='dispatch')
 class AssignmentResponseUpdateView(UpdateView):
     model = AssignmentResponse
     form_class = AssignmetResponseForm
@@ -186,7 +186,7 @@ class AssignmentResponseUpdateView(UpdateView):
         context['assigment'] = Assignment.objects.get(pk=self.kwargs['assigment_id'])
         return context
 
-
+@method_decorator(login_required(login_url='/'), name='dispatch')
 class AttendanceView(ListView):
     model = Attendance
     template_name = 'universities_app/lecturer/attendances.html'
@@ -213,7 +213,7 @@ class AttendanceView(ListView):
         except TypeError:
             return None
 
-
+@login_required(login_url='/')
 def create_attendance(request):
     subject_id = request.user.lecturer.subject.id
     subject = get_object_or_404(Subject, id=subject_id)
